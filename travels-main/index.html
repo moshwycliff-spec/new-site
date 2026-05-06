@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamari Luxurious Tours | Explore the Pearl of Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="form.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="shortcut icon" href="./images/kamari.png" type="image/x-icon">
+    <style>
+        
+        :root {
+            --gold: #D4AF37;
+            --forest: #1B3022;
+            --deep: #0B1A10;
+            --cream: #FDF5E6;
+            --white: #ffffff;
+            --text-gray: #555;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--cream); color: var(--deep); overflow-x: hidden; font-family: 'Montserrat', sans-serif; line-height: 1.6; }
+        h1, h2, h3, .logo { font-family: 'Playfair Display', serif; }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .navbar {
+            position: fixed; width: 100%; padding: 25px 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; transition: var(--transition);
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: var(--deep);
+            padding: 15px 8%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .logo {
+            color: var(--gold); font-size: 1.8rem; font-weight: bold;
+            text-decoration: none; line-height: 1; text-transform: uppercase;
+        }
+        .logo span {
+            display: block; font-size: 0.7rem; color: white;
+            letter-spacing: 3px; font-family: 'Montserrat'; margin-top: 5px;
+        }
+
+        .menu-btn {
+            background: none; border: none; color: var(--gold);
+            font-size: 1.8rem; cursor: pointer; display: none;
+            z-index: 1001;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--gold);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .menu-btn { display: block; }
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--deep);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                gap: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                transform: translateY(-150%);
+                transition: transform 0.4s ease;
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+            }
+
+            .whatsapp-link {
+                background: #25D366;
+                color: white !important;
+                padding: 8px 20px;
+                border-radius: 30px;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            .whatsapp-link:hover {
+                background: #128C7E;
+                color: white !important;
+            }
+        }
+
+        .hero {
+            height: 100vh; 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+            url('kilimanjaro.jpg');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; color: white; padding: 0 10%;
+        }
+        .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); margin-bottom: 10px; letter-spacing: 2px; }
+        .hero p { font-size: 1.2rem; font-style: italic; color: var(--gold); margin-bottom: 30px; letter-spacing: 1px; }
+
+        .section { padding: 100px 8%; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { font-size: 3rem; color: var(--forest); margin-bottom: 15px; }
+        .section-title .divider { width: 80px; height: 3px; background: var(--gold); margin: 0 auto; }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { 
+            background: var(--white); padding: 50px 30px; border-radius: 2px; 
+            text-align: center; position: relative; transition: var(--transition); 
+            border: 1px solid rgba(0,0,0,0.05); 
+        }
+        .card:hover { 
+            transform: translateY(-15px); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08); 
+        }
+        .card i { font-size: 2.5rem; color: var(--gold); margin-bottom: 25px; }
+        .card h3 { margin-bottom: 15px; letter-spacing: 1px; }
+
+        .tours-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            gap: 20px; 
+        }
+        .tour-item { 
+            position: relative; height: 500px; overflow: hidden; color: white; cursor: pointer;
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 40px;
+        }
+        .tour-bg { 
+            position: absolute; top:0; left:0; width:100%; height:100%; z-index: -1;
+            background-size: cover; background-position: center; transition: transform 1s ease;
+        }
+        .tour-item:hover .tour-bg { transform: scale(1.1); }
+        .tour-overlay { 
+            position: absolute; top:0; left:0; width:100%; height:100%; 
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8)); z-index: -1; 
+        }
+        .tour-price { color: var(--gold); font-weight: bold; margin-bottom: 10px; }
+        .tour-item h3 { font-size: 1.8rem; margin-bottom: 10px; }
+
+        .heritage-feature { 
+            display: flex; flex-wrap: wrap; background: var(--forest); color: white; 
+            border-radius: 5px; overflow: hidden; margin-top: 50px; 
+        }
+        .heritage-img { 
+            flex: 1; min-width: 300px; 
+            background: url('kilimanjaro.jpg') center/cover; 
+            min-height: 400px; 
+        }
+        .heritage-text { 
+            flex: 1; padding: 60px; min-width: 300px; 
+        }
+        .heritage-text h3 { 
+            color: var(--gold); font-size: 2rem; margin-bottom: 20px; 
+        }
+        .heritage-list { list-style: none; margin-top: 20px; }
+        .heritage-list li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .heritage-list li i { color: var(--gold); font-size: 0.8rem; }
+
+        .testimonials { background: #fff; text-align: center; }
+        .testimonial-slider { max-width: 800px; margin: 0 auto; padding: 40px; font-style: italic; }
+        .testimonial-slider p { font-size: 1.3rem; margin-bottom: 20px; }
+        .testimonial-slider span { font-weight: bold; font-style: normal; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+
+        .booking-section { padding: 100px 8%; background: var(--cream); }
+        .flex-container { 
+            display: flex; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; 
+            box-shadow: 0 40px 100px rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; 
+        }
+        .form-content { 
+            flex: 1.5; background: #fff; padding: 60px; min-width: 350px; 
+        }
+        .form-sidebar { 
+            flex: 1; background: var(--deep); color: #fff; padding: 60px; min-width: 300px; 
+            display: flex; flex-direction: column; justify-content: center; 
+        }
+        
+        .input-group { margin-bottom: 25px; }
+        .input-group label { 
+            display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; 
+            margin-bottom: 8px; color: #999; 
+        }
+        input, select, textarea, .consent-checkbox { 
+            width: 100%; padding: 15px; border: 1px solid #eee; 
+            background: #f9f9f9; border-radius: 5px; font-size: 1rem; 
+        }
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--gold); outline: none; background: #fff; 
+        }
+
+        /* Country dropdown with flags */
+        select#country {
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+        }
+
+        .consent-container {
+            display: flex; align-items: flex-start; gap: 12px; margin: 20px 0;
+        }
+        .consent-checkbox {
+            width: auto; height: 20px; margin-top: 4px;
+        }
+        .consent-label {
+            font-size: 0.85rem; color: var(--text-gray);
+        }
+        .consent-label a {
+            color: var(--gold); text-decoration: none;
+        }
+        .consent-label a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-gold { 
+            background: var(--gold); color: var(--deep); border: none; 
+            padding: 18px 30px; font-weight: 700; cursor: pointer; 
+            text-transform: uppercase; transition: 0.3s; width: 100%; border-radius: 5px; 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-gold:hover { 
+            background: var(--forest); color: white; 
+        }
+        .btn-whatsapp { 
+            background: #25D366; color: white; display: flex; 
+            align-items: center; justify-content: center; gap: 10px; 
+            margin-top: 15px; text-decoration: none; padding: 18px; 
+            border-radius: 5px; font-weight: 700; 
+        }
+
+        /* Toast for copy success */
+        #copy-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--gold);
+            color: var(--deep);
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 2000;
+        }
+        #copy-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        footer { 
+            background: var(--deep); color: #888; padding: 80px 8% 40px; text-align: center; 
+        }
+        .footer-logo { 
+            color: var(--gold); font-size: 2rem; margin-bottom: 20px; 
+        }
+        .social-links { margin: 30px 0; }
+        .social-links a { 
+            color: #fff; margin: 0 15px; font-size: 1.5rem; transition: 0.3s; 
+        }
+        .social-links a:hover { color: var(--gold); }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 20px 5%; }
+            .section { padding: 60px 5%; }
+            .form-content, .form-sidebar { padding: 40px 25px; }
+            .heritage-feature { flex-direction: column; }
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" id="navbar">
+        <a href="#home" class="logo">KAMARI<span>LUXURIOUS TOURS UGANDA</span></a>
+        <button class="menu-btn" id="menu-btn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <ul class="nav-menu" id="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#tours">Expeditions</a></li>
+            <li><a href="#booking">Inquire</a></li>
+            <li><a href="https://wa.me/256792915940" class="whatsapp-link" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="home">
+        <h1 class="reveal">Explore the Pearl of Africa to its Heights!</h1>
+        <p class="reveal">"Nature loving is a religion"</p>
+        <a href="#booking" class="btn-gold reveal" style="width: auto;">
+            <i class="fa-solid fa-envelope"></i> Request an Invitation
+        </a>
+    </header>
+
+    <section class="section reveal" id="philosophy">
+        <div class="section-title">
+            <h2>Our Core Values</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="grid-3">
+            <div class="card">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h3>Bespoke Craftsmanship</h3>
+                <p>We reject standard itineraries. Every journey is a unique work of art designed to reflect your specific desires.</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-shield-heart"></i>
+                <h3>Meticulous Service</h3>
+                <p>Intuitive excellence that anticipates your needs before they are voiced, ensuring a seamless, worry-free journey.</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-leaf"></i>
+                <h3>Authentic Stewardship</h3>
+                <p>Operating with deep respect for Uganda's wildlife and culture through ethical and sustainable practices.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="tours">
+        <div class="section-title reveal">
+            <h2>Curated Expeditions</h2>
+            <p>Hand-picked luxury encounters across Uganda</p>
+            <div class="divider"></div>
+        </div>
+        
+        <div class="tours-container">
+            <div class="tour-item reveal">
+                <div class="tour-bg" style="background-image: url('download.jpg')"></div>
+                <div class="tour-overlay"></div>
+                <!-- <span class="tour-price">From $9,000</span> -->
+                <h3>Signature Gorilla Curator</h3>
+                <p>Fly-in logistics, private air charters, and unhurried 4-hour habituation encounters.</p>
+            </div>
+
+            <div class="tour-item reveal">
+                <div class="tour-bg" style="background-image: url('Electric\ Safari\ in\ Kenya.jpg')"></div>
+                <div class="tour-overlay"></div>
+                <!-- <span class="tour-price">From $13,300</span> -->
+                <h3>The Pearl of Silence</h3>
+                <p>A 7-day digital detox. Device surrender for deep reconnection in Lake Mutanda and Kalinzu Forest.</p>
+            </div>
+
+            <div class="tour-item reveal">
+                <div class="tour-bg" style="background-image: url('Safari\ in\ Tanzania\ and\ the\ island\ of\ Zanzibar.jpg')"></div>
+                <div class="tour-overlay"></div>
+                <!-- <span class="tour-price">From $12,600</span> -->
+                <h3>The Grand Safari</h3>
+                <p>10 days covering the ultimate circuit. Private land cruisers with satellite Wi-Fi and bush dinners.</p>
+            </div>
+        </div>
+
+        <div class="heritage-feature reveal">
+            <div class="heritage-img"></div>
+            <div class="heritage-text">
+                <h3>The Ankole Heritage</h3>
+                <p>Live the life of an Ankole Royal at Nshenyi Cultural Village.</p>
+                <ul class="heritage-list">
+                    <li><i class="fa-solid fa-check"></i> 06:00 AM Milking Ritual (Okukama) </li>
+                    <li><i class="fa-solid fa-check"></i> Traditional Ghee & Eshabwe making </li>
+                    <li><i class="fa-solid fa-check"></i> Sunset hills overlooking Rwanda & Tanzania </li>
+                    <!-- <li><i class="fa-solid fa-check"></i> Starting at $3,600 per person </li> -->
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section testimonials reveal">
+        <div class="section-title">
+            <h2>Guest Impressions</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="testimonial-slider">
+            <p>"The level of detail was staggering. We didn't just see gorillas; we felt the soul of the forest. Paul's personal touch made everything effortless."</p>
+            <span>&mdash; The Hendersons, UK</span>
+        </div>
+    </section>
+
+    <section class="booking-section" id="booking">
+        <div class="flex-container reveal">
+            <div class="form-content">
+                
+<div class="booking-trigger-wrap">
+  <button class="btn-modal btn-whatsapp" onclick="openModal('wa')">
+    <!-- WhatsApp icon -->
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    Send via WhatsApp
+  </button>
+
+  <button class="btn-modal btn-email" onclick="openModal('email')">
+    <!-- Email icon -->
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <polyline points="2,4 12,13 22,4"/>
+    </svg>
+    Send via Email
+  </button>
+</div>
+
+
+<!-- ══════════════════════════════
+     WHATSAPP MODAL
+     ══════════════════════════════ -->
+<div class="km-overlay" id="modal-wa" onclick="closeOnBackdrop(event,'modal-wa')">
+  <div class="km-modal" role="dialog" aria-modal="true" aria-labelledby="wa-title">
+    <button class="km-close" onclick="closeModal('modal-wa')" aria-label="Close">&#10005;</button>
+
+    <span class="km-modal-badge">&#128337; Instant Response</span>
+    <h2 id="wa-title">WhatsApp Inquiry</h2>
+    <p class="km-subtitle">Fill in your details and we'll open a pre-composed message in WhatsApp for you to send directly to our concierge.</p>
+
+    <div id="wa-form">
+      <div class="km-row">
+        <div class="km-field">
+          <label for="wa-name">Full Name *</label>
+          <input type="text" id="wa-name" placeholder="Your full name" required />
+        </div>
+        <div class="km-field">
+          <label for="wa-country">Country *</label>
+          <select id="wa-country">
+            <option value="">— Select —</option>
+            <option>🇺🇸 United States</option>
+            <option>🇬🇧 United Kingdom</option>
+            <option>🇩🇪 Germany</option>
+            <option>🇫🇷 France</option>
+            <option>🇨🇦 Canada</option>
+            <option>🇦🇺 Australia</option>
+            <option>🇳🇱 Netherlands</option>
+            <option>🇸🇪 Sweden</option>
+            <option>🇨🇭 Switzerland</option>
+            <option>🇦🇪 UAE</option>
+            <option>🇿🇦 South Africa</option>
+            <option>🇰🇪 Kenya</option>
+            <option>🇷🇼 Rwanda</option>
+            <option>🇺🇬 Uganda</option>
+            <option>🌎 Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="km-field">
+        <label for="wa-expedition">Preferred Expedition</label>
+        <select id="wa-expedition">
+          <option value="">— Select expedition —</option>
+          <option>The Signature Primate Curator</option>
+          <option>The Pearl of Silence (Detox)</option>
+          <option>The Grand Safari Circuit</option>
+          <option>Ankole Heritage Experience</option>
+          <option>Custom Bespoke Request</option>
+        </select>
+      </div>
+
+      <div class="km-field">
+        <label for="wa-dates">Preferred Travel Dates</label>
+        <input type="text" id="wa-dates" placeholder="e.g. June 2025, flexible…" />
+      </div>
+
+      <div class="km-field">
+        <label for="wa-guests">Number of Guests</label>
+        <input type="text" id="wa-guests" placeholder="e.g. 2 adults, 1 child…" />
+      </div>
+
+      <div class="km-field">
+        <label for="wa-message">Special Requests</label>
+        <textarea id="wa-message" placeholder="Any special requirements, accessibility needs, or notes…"></textarea>
+      </div>
+
+      <hr class="km-divider" />
+
+      <button class="km-submit km-submit-wa" onclick="submitWhatsApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Open WhatsApp
+      </button>
+      <p class="km-note">You'll be redirected to WhatsApp with a pre-filled message. Send it to reach our concierge instantly.</p>
+    </div>
+
+    <div class="km-success" id="wa-success">
+      <div class="km-success-icon wa">✓</div>
+      <h3>Opening WhatsApp…</h3>
+      <p>Your pre-filled message is ready. If WhatsApp didn't open, <a href="https://wa.me/256792915940" style="color:#25D366">click here</a>.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     EMAIL MODAL
+     ══════════════════════════════ -->
+<div class="km-overlay" id="modal-email" onclick="closeOnBackdrop(event,'modal-email')">
+  <div class="km-modal" role="dialog" aria-modal="true" aria-labelledby="email-title">
+    <button class="km-close" onclick="closeModal('modal-email')" aria-label="Close">&#10005;</button>
+
+    <span class="km-modal-badge">✉️ Formal Correspondence</span>
+    <h2 id="email-title">Send an Email Inquiry</h2>
+    <p class="km-subtitle">Complete the form below. Your default mail client will open with a beautifully composed message ready to send.</p>
+
+    <div id="email-form">
+      <div class="km-row">
+        <div class="km-field">
+          <label for="em-name">Full Name *</label>
+          <input type="text" id="em-name" placeholder="Your full name" required />
+        </div>
+        <div class="km-field">
+          <label for="em-email">Your Email *</label>
+          <input type="email" id="em-email" placeholder="you@example.com" required />
+        </div>
+      </div>
+
+      <div class="km-row">
+        <div class="km-field">
+          <label for="em-country">Country *</label>
+          <select id="em-country">
+            <option value="">— Select —</option>
+            <option>🇺🇸 United States</option>
+            <option>🇬🇧 United Kingdom</option>
+            <option>🇩🇪 Germany</option>
+            <option>🇫🇷 France</option>
+            <option>🇨🇦 Canada</option>
+            <option>🇦🇺 Australia</option>
+            <option>🇳🇱 Netherlands</option>
+            <option>🇸🇪 Sweden</option>
+            <option>🇨🇭 Switzerland</option>
+            <option>🇦🇪 UAE</option>
+            <option>🇿🇦 South Africa</option>
+            <option>🇰🇪 Kenya</option>
+            <option>🇷🇼 Rwanda</option>
+            <option>🇺🇬 Uganda</option>
+            <option>🌎 Other</option>
+          </select>
+        </div>
+        <div class="km-field">
+          <label for="em-phone">Phone (Optional)</label>
+          <input type="tel" id="em-phone" placeholder="+1 555 000 0000" />
+        </div>
+      </div>
+
+      <div class="km-field">
+        <label for="em-expedition">Preferred Expedition</label>
+        <select id="em-expedition">
+          <option value="">— Select expedition —</option>
+          <option>The Signature Primate Curator</option>
+          <option>The Pearl of Silence (Detox)</option>
+          <option>The Grand Safari Circuit</option>
+          <option>Ankole Heritage Experience</option>
+          <option>Custom Bespoke Request</option>
+        </select>
+      </div>
+
+      <div class="km-row">
+        <div class="km-field">
+          <label for="em-dates">Preferred Travel Dates</label>
+          <input type="text" id="em-dates" placeholder="e.g. June 2025…" />
+        </div>
+        <div class="km-field">
+          <label for="em-guests">No. of Guests</label>
+          <input type="text" id="em-guests" placeholder="e.g. 2 adults…" />
+        </div>
+      </div>
+
+      <div class="km-field">
+        <label for="em-message">Your Message *</label>
+        <textarea id="em-message" placeholder="Tell us about your dream experience, special requirements, or any questions…"></textarea>
+      </div>
+
+      <hr class="km-divider" />
+
+      <button class="km-submit km-submit-email" onclick="submitEmail()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+        Send Inquiry via Email
+      </button>
+      <p class="km-note">Your default email app will open with all details pre-filled. You can review and edit before sending.</p>
+    </div>
+
+    <div class="km-success" id="email-success">
+      <div class="km-success-icon em">✓</div>
+      <h3>Email Client Opening…</h3>
+      <p>Your inquiry is pre-composed. Review and hit Send in your mail app.<br>We respond within 24 hours.</p>
+    </div>
+  </div>
+</div>
+
+                <div class="consent-container">
+                    <input type="checkbox" id="consent" class="consent-checkbox" required>
+                    <label for="consent" class="consent-label">
+                        I consent to Kamari Luxurious Tours processing my personal data to respond to this inquiry, in accordance with our <a href="#" target="_blank">Privacy Policy</a> and GDPR/UK DPA 2018. I understand I may withdraw consent at any time.
+                    </label>
+                </div>
+
+               
+            </div>
+            <div class="form-sidebar">
+                <h3 style="color: var(--gold); margin-bottom: 20px;">The Kamari Promise</h3>
+                <p style="margin-bottom: 30px; opacity: 0.8;">"I personally oversee every itinerary from the first email to the final departure. You are not a booking; you are our guest."</p>
+                <div style="font-size: 0.9rem;">
+                    <p><i class="fa-solid fa-user-tie" style="color: var(--gold); margin-right: 10px;"></i> Ampiire Paul, CEO </p>
+                    <p style="margin-top: 15px;"><i class="fa-solid fa-envelope" style="color: var(--gold); margin-right: 10px;"></i> paulkamari45@gmail.com </p>
+                    <p style="margin-top: 15px;"><i class="fa-solid fa-phone" style="color: var(--gold); margin-right: 10px;"></i> +256 792 915 940</p>
+                    <br>
+                     <a href="Kamari luxurious tours Uganda" target="_blank"  style="color: aliceblue; font-size: 20px; text-decoration: none;">&nbsp;&nbsp;<i class="fa-brands fa-instagram" style="color: aliceblue; font-size: 20px;"></i>Instagram</a> <p>Kamari luxurious tours Uganda</p>
+                     <br>
+            <a href="#" target="_blank"  style="color: aliceblue; font-size: 20px; text-decoration: none;">&nbsp;&nbsp;<i class="fa-brands fa-facebook-f" style="color: aliceblue; font-size: 20px;"></i>Facebook</a>  <p>Kamari luxtours.</p>
+            <br>
+            <a href="Kamari luxtours." target="_blank"  style="color: aliceblue; font-size: 20px; text-decoration: none;">&nbsp;&nbsp;<i class="fa-brands fa-linkedin-in" style="color: aliceblue; font-size: 20px;"></i>LinkedIn</a> <p>Kamari luxtours.</p>
+            <br>
+            <a href="Kamari luxtours." target="_blank"  style="color: aliceblue; font-size: 20px; text-decoration: none;"><i class="fa-brands fa-x-twitter"></i> WE are on X</a> <p>Kamari luxtours</p>
+        
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">KAMARI</div>
+        <p>"Explore the pearl of Africa to its heights"</p>
+        <div class="social-links">
+            <a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+        <p style="font-size: 0.75rem; color: #555; margin-top: 40px;">
+            &copy; 2026 Kamari Luxurious Tours Uganda SMC Ltd. Registered with URSB & UTB.<br>
+            P.O Box 199058 Kampala GPO.
+        </p>
+        <p>
+            Website Designed By Mosh-Wycliff 2026 &copy;
+            <a href="moshwycliff-spec.github.io/robo">see developer</a>
+        </p>
+    </footer>
+
+    <!-- Toast for copy success -->
+    <div id="copy-toast">✅ Link copied to clipboard!</div>
+
+    <script>
+        
+
+        // Navigation handlers (same as before)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.hostname && this.hostname !== location.hostname) return;
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    document.getElementById('nav-menu').classList.remove('active');
+                    document.getElementById('menu-btn').querySelector('i').className = 'fa-solid fa-bars';
+                    window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 100);
+        });
+
+        const menuBtn = document.getElementById('menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        menuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            menuBtn.querySelector('i').className = navMenu.classList.contains('active') 
+                ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        });
+        document.addEventListener('click', e => {
+            if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+                navMenu.classList.remove('active');
+                menuBtn.querySelector('i').className = 'fa-solid fa-bars';
+            }
+        });
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('active'));
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // ✅ PDF Generator — now includes Phone & Country
+        function generatePDF(name, country, phone, tour, msg, date, time) {
+            try {
+                const doc = new jsPDF();
+                const gold = [212, 175, 55];
+                const forest = [27, 48, 34];
+
+                doc.setFont('helvetica', 'bold').setTextColor(...gold).setFontSize(24);
+                doc.text("KAMARI LUXURIOUS TOURS", 105, 30, { align: 'center' });
+                doc.setFontSize(12).setTextColor(11, 26, 16);
+                doc.text("Uganda • The Pearl of Africa", 105, 38, { align: 'center' });
+
+                doc.setDrawColor(...gold).setLineWidth(0.5).line(40, 45, 170, 45);
+                doc.setTextColor(...forest).setFontSize(18);
+                doc.text("Personal Expedition Inquiry", 105, 60, { align: 'center' });
+
+                doc.setFontSize(11).setTextColor(0);
+                let y = 75;
+                const add = (label, val) => {
+                    if (!val) return;
+                    doc.setFont('helvetica', 'bold').text(label, 40, y);
+                    doc.setFont('helvetica', 'normal').text(val, 80, y);
+                    y += 8;
+                };
+
+                add("Client Name:", name);
+                add("Country:", country);
+                add("Phone:", phone);
+                add("Expedition:", tour);
+                add("Date Sent:", `${date}, ${time}`);
+                add("Data Consent:", "✅ Provided");
+
+                if (msg) {
+                    y += 5;
+                    doc.setFont('helvetica', 'bold').text("Special Requests:", 40, y);
+                    y += 5;
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(doc.splitTextToSize(msg, 120), 40, y);
+                }
+
+                y += 12;
+                doc.setFont('times', 'italic').setFontSize(10).setTextColor(...forest);
+                const quote = `"I personally oversee every itinerary from the first email to the final departure. You are not a booking; you are our guest."`;
+                doc.text(doc.splitTextToSize(quote, 130), 40, y);
+                y += 8;
+                doc.setFont('helvetica', 'bold').setTextColor(...gold);
+                doc.text("— Ampiire Paul, CEO", 40, y + 5);
+
+                y = 275;
+                doc.setFontSize(9).setTextColor(100);
+                doc.text("Generated on-site at kamari-tours.com", 105, y, { align: 'center' });
+                doc.text("© 2026 Kamari Luxurious Tours • URSB & UTB Registered", 105, y + 5, { align: 'center' });
+
+                doc.save(`Kamari_Inquiry_${name.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
+
+            } catch (e) {
+                console.error("PDF Error:", e);
+            }
+        }
+
+        // form script
+        
+  /* ── Modal open/close ── */
+  function openModal(type) {
+    const id = type === 'wa' ? 'modal-wa' : 'modal-email';
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function closeOnBackdrop(e, id) {
+    if (e.target === document.getElementById(id)) closeModal(id);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.km-overlay.active').forEach(el => {
+        el.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+
+  /* ── WhatsApp submit ── */
+  function submitWhatsApp() {
+    const name       = document.getElementById('wa-name').value.trim();
+    const country    = document.getElementById('wa-country').value;
+    const expedition = document.getElementById('wa-expedition').value;
+    const dates      = document.getElementById('wa-dates').value.trim();
+    const guests     = document.getElementById('wa-guests').value.trim();
+    const message    = document.getElementById('wa-message').value.trim();
+
+    if (!name || !country) {
+      alert('Please fill in your full name and country before sending.');
+      return;
+    }
+
+    const lines = [
+      '✨ *Kamari Luxurious Tours – Inquiry*',
+      '',
+      `👤 *Name:* ${name}`,
+      `🌍 *Country:* ${country}`,
+      expedition ? `🗺️ *Expedition:* ${expedition}` : '',
+      dates      ? `📅 *Dates:* ${dates}`            : '',
+      guests     ? `👥 *Guests:* ${guests}`           : '',
+      message    ? `📝 *Notes:* ${message}`           : '',
+      '',
+      '_I would like to inquire about a bespoke journey with Kamari._'
+    ].filter(l => l !== undefined);
+
+    const text = encodeURIComponent(lines.join('\n'));
+    const phone = '256792915940';
+    const url = `https://wa.me/${phone}?text=${text}`;
+
+    // Show success state
+    document.getElementById('wa-form').style.display = 'none';
+    document.getElementById('wa-success').classList.add('show');
+
+    // Update the fallback link
+    document.querySelector('#wa-success a').href = url;
+
+    // Open WhatsApp
+    window.open(url, '_blank');
+
+    // Auto-close modal after 3s
+    setTimeout(() => {
+      closeModal('modal-wa');
+      // Reset form
+      setTimeout(() => {
+        document.getElementById('wa-form').style.display = '';
+        document.getElementById('wa-success').classList.remove('show');
+        document.getElementById('wa-name').value = '';
+        document.getElementById('wa-country').value = '';
+        document.getElementById('wa-expedition').value = '';
+        document.getElementById('wa-dates').value = '';
+        document.getElementById('wa-guests').value = '';
+        document.getElementById('wa-message').value = '';
+      }, 600);
+    }, 3000);
+  }
+
+  /* ── Email submit ── */
+  function submitEmail() {
+    const name       = document.getElementById('em-name').value.trim();
+    const email      = document.getElementById('em-email').value.trim();
+    const country    = document.getElementById('em-country').value;
+    const phone      = document.getElementById('em-phone').value.trim();
+    const expedition = document.getElementById('em-expedition').value;
+    const dates      = document.getElementById('em-dates').value.trim();
+    const guests     = document.getElementById('em-guests').value.trim();
+    const message    = document.getElementById('em-message').value.trim();
+
+    if (!name || !email || !country) {
+      alert('Please fill in your name, email, and country before sending.');
+      return;
+    }
+
+    const to      = 'paulkamari45@gmail.com';
+    const subject = encodeURIComponent(`Luxury Tour Inquiry – ${name} (${country})`);
+    const body    = encodeURIComponent(
+`Dear Paul,
+
+I am writing to inquire about a bespoke journey with Kamari Luxurious Tours.
+
+PERSONAL DETAILS
+────────────────
+Full Name:   ${name}
+Email:       ${email}
+Country:     ${country}
+${phone ? `Phone:       ${phone}\n` : ''}
+JOURNEY DETAILS
+────────────────
+${expedition ? `Expedition:  ${expedition}\n` : ''}${dates ? `Travel Dates: ${dates}\n` : ''}${guests ? `No. of Guests: ${guests}\n` : ''}
+${message ? `ADDITIONAL NOTES\n────────────────\n${message}\n\n` : ''}I look forward to your personal response.
+
+Kind regards,
+${name}`
+    );
+
+    const mailtoUrl = `mailto:${to}?subject=${subject}&body=${body}`;
+
+    // Show success state
+    document.getElementById('email-form').style.display = 'none';
+    document.getElementById('email-success').classList.add('show');
+
+    window.location.href = mailtoUrl;
+
+    setTimeout(() => {
+      closeModal('modal-email');
+      setTimeout(() => {
+        document.getElementById('email-form').style.display = '';
+        document.getElementById('email-success').classList.remove('show');
+        ['em-name','em-email','em-phone','em-dates','em-guests','em-message'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+        document.getElementById('em-country').value = '';
+        document.getElementById('em-expedition').value = '';
+      }, 600);
+    }, 3500);
+  }
+
+    </script>
+</body>
+<!-- the website was coded by Mosh-wycliff @ 2026 -->
+</html>

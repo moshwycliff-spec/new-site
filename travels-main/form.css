@@ -1,0 +1,285 @@
+
+  /* ── Booking trigger button ── */
+  .booking-trigger-wrap {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 2rem 0;
+  }
+
+  .btn-modal {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 32px;
+    border: none;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+
+  .btn-whatsapp {
+    background: #1a1a1a;
+    color: #c8a96e;
+    border: 1px solid #c8a96e44;
+  }
+  .btn-whatsapp:hover {
+    background: #25D366;
+    color: #fff;
+    border-color: #25D366;
+    box-shadow: 0 8px 30px #25D36644;
+  }
+
+  .btn-email {
+    background: transparent;
+    color: #c8a96e;
+    border: 1px solid #c8a96e;
+  }
+  .btn-email:hover {
+    background: #c8a96e;
+    color: #0a0a0a;
+    box-shadow: 0 8px 30px #c8a96e44;
+  }
+
+  /* ── Modal overlay ── */
+  .km-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(6px);
+    z-index: 9000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    animation: fadeIn 0.25s ease;
+  }
+  .km-overlay.active {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ── Modal box ── */
+  .km-modal {
+    background: #0e0e0e;
+    border: 1px solid #c8a96e33;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 540px;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: 48px 44px 40px;
+    position: relative;
+    animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1);
+    scrollbar-width: thin;
+    scrollbar-color: #c8a96e44 transparent;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* scrollbar webkit */
+  .km-modal::-webkit-scrollbar { width: 4px; }
+  .km-modal::-webkit-scrollbar-thumb { background: #c8a96e44; border-radius: 2px; }
+
+  /* ── Close button ── */
+  .km-close {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .km-close:hover { color: #c8a96e; }
+
+  /* ── Modal header ── */
+  .km-modal-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c8a96e;
+    border: 1px solid #c8a96e55;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+
+  .km-modal h2 {
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: #f0e8d8;
+    margin: 0 0 6px;
+    line-height: 1.25;
+  }
+
+  .km-modal .km-subtitle {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 32px;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+  }
+
+  /* ── Form fields ── */
+  .km-field {
+    margin-bottom: 20px;
+  }
+
+  .km-field label {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #c8a96e;
+    margin-bottom: 7px;
+  }
+
+  .km-field input,
+  .km-field select,
+  .km-field textarea {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #2e2e2e;
+    border-radius: 3px;
+    color: #e8dcc8;
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.25s;
+    box-sizing: border-box;
+    appearance: none;
+  }
+  .km-field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23c8a96e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .km-field input::placeholder,
+  .km-field textarea::placeholder { color: #555; }
+  .km-field input:focus,
+  .km-field select:focus,
+  .km-field textarea:focus { border-color: #c8a96e88; }
+  .km-field textarea { resize: vertical; min-height: 90px; }
+
+  .km-field select option { background: #1a1a1a; color: #e8dcc8; }
+
+  /* ── Row layout ── */
+  .km-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 480px) {
+    .km-row { grid-template-columns: 1fr; }
+    .km-modal { 
+      /* padding: 36px 24px 32px;  */
+         padding-top: 0%;
+    }
+  }
+
+  /* ── Divider ── */
+  .km-divider {
+    border: none;
+    border-top: 1px solid #2a2a2a;
+    margin: 24px 0;
+  }
+
+  /* ── Submit buttons ── */
+  .km-submit {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .km-submit-wa {
+    background: #25D366;
+    color: #fff;
+  }
+  .km-submit-wa:hover {
+    background: #1ebe5d;
+    box-shadow: 0 8px 28px #25D36655;
+    transform: translateY(-1px);
+  }
+
+  .km-submit-email {
+    background: #c8a96e;
+    color: #0a0a0a;
+  }
+  .km-submit-email:hover {
+    background: #d4b87a;
+    box-shadow: 0 8px 28px #c8a96e55;
+    transform: translateY(-1px);
+  }
+
+  /* ── Note text ── */
+  .km-note {
+    font-size: 0.72rem;
+    color: #555;
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Success state ── */
+  .km-success {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 0;
+    gap: 14px;
+  }
+  .km-success.show { display: flex; }
+  .km-success-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+  }
+  .km-success-icon.wa  { background: #25D36622; color: #25D366; }
+  .km-success-icon.em  { background: #c8a96e22; color: #c8a96e; }
+  .km-success h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    color: #f0e8d8;
+    font-weight: 400;
+    margin: 0;
+  }
+  .km-success p { color: #888; font-size: 0.85rem; margin: 0; }
